@@ -110,7 +110,7 @@ def dashboard():
 
     cards = [
         {"title": "FOS LMS", "description": "Faculty Of Science Learning Management System", "icon": "bi-person-circle", "link": "#"},
-        {"title": "Library System", "description": "Manage your books and library activities", "icon": "bi-book", "link": "#"},
+        {"title": "Library System", "description": "Manage your books and library activities", "icon": "bi-book", "link": "/studentbooks"},
         {"title": "Student Portal", "description": "Access your grades and profile", "icon": "bi-person", "link": "#"},
         {"title": "Course Registration", "description": "Register for courses every semester", "icon": "bi-pencil", "link": "#"},
         {"title": "Exam Schedule", "description": "Check your exam timetable", "icon": "bi-calendar", "link": "#"},
@@ -130,6 +130,35 @@ def logout():
     session.pop('student_name', None)
     flash('You have been logged out.', 'info')
     return redirect('/login')  # Redirect to login page after logout
+
+@app.route('/studentbooks', methods=['GET'])
+def list_books():
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, title, author, catagory, isbn, filename FROM library')
+        books = cursor.fetchall()
+    return render_template('studentbooks.html', books=books)
+
+# Route to download a book
+# Route to download a book
+@app.route('/download/<int:book_id>', methods=['GET'])
+def download_book(book_id):
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        # Corrected query to fetch from the 'library' table, not 'books'
+        cursor.execute('SELECT filename FROM library WHERE id = ?', (book_id,))
+        book = cursor.fetchone()
+        if book:
+            filename = book[0]
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            if os.path.exists(file_path):
+                return send_file(file_path, as_attachment=True)
+            else:
+                flash('File not found on the server!', 'danger')
+                return redirect('/studentbooks')
+        else:
+            flash('Book not found!', 'danger')
+            return redirect('/studentbooks')
 
 
 
@@ -259,8 +288,8 @@ def library_admin():
     cards = [
         {"title": "Add Books", "description": "Using this interface for adding the books", "icon": "bi-person-circle", "link": "/addbook"},
         {"title": " Book", "description": "All books display here", "icon": "bi-book", "link": "/books"},
-        {"title": "Delete Book", "description": "Outdated books for deleting", "icon": "bi-person", "link": "#"},
-        {"title": "Reporting", "description": "This is reporting part", "icon": "bi-pencil", "link": "#"},
+        {"title": "Delete Book", "description": "Outdated books for deleting", "icon": "bi-person", "link": "/books"},
+        {"title": "Reporting", "description": "This is reporting part", "icon": "bi-pencil", "link": "/books"},
  
        
     ]
