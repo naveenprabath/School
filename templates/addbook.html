@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #a52a2a;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color:  #a52a2a;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #a52a2a;
+        }
+
+        form input[type="text"],
+        form input[type="integer"],
+        form input[type="file"],
+        form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #a52a2a;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        form input[type="file"] {
+            border: none;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #a52a2a;
+        }
+        nav {
+            background-color: #a52a2a; /* Brown background */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        /* University Logo */
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px; /* Adjust logo size */
+            margin-right: 10px;
+        }
+
+        /* Navbar links */
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .navbar-links a:hover {
+            text-decoration: underline;
+        }
+        .btn-primary{
+            background-color: #a52a2a;
+            border-color: #a52a2a;
+
+        }
+        .btn-primary:hover{
+            background-color: maroon;
+            border-color: maroon;
+        }
+        .h1{
+            color:#a52a2a;
+        }
+    
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="http://www.pdn.ac.lk" class="logo">
+            <img src="{{ url_for('static', filename='university_logo.png') }}">
+            
+        </a>
+
+        
+    
+       
+        <div class="navbar-links">
+            <a href="#">Department</a>
+            <a href="#">Publication</a>
+            <a href="#">Online Services</a>
+            <a href="/login">SignIn</a>
+            <a href="/register">SignUp</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 style="color:#a52a2a;">Add Book</h1>
+        <form method="POST" action="/addbook" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" placeholder="Enter book title" required >
+            </div>
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" name="author" id="author" placeholder="Enter author name" required>
+            </div>
+            <div class="form-group">
+                <label for="catagory">Category:</label>
+                <input type="text" name="catagory" id="catagory" placeholder="Enter book category" required>
+            </div>
+            <div class="form-group">
+                <label for="isbn">ISBN:</label>
+                <input type="integer" name="isbn" id="isbn" placeholder="Enter book ISBN" required>
+            </div>
+            <div class="form-group">
+                <label for="file">Upload PDF:</label>
+                <input type="file" name="file" id="file" accept="application/pdf" required>
+            </div>
+            <button type="submit" class="btn-primary">Upload Book</button>
+        </form>
+    </div>
+    <footer>
+        © 2024 Your Library System
+    </footer>
+</body>
+</html>

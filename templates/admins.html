@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Admins</title>
+</head>
+<body>
+    <h1>List of Registered Students</h1>
+    <ul>
+        {% for admin in admins %}
+        <li>{{ admin[1] }} ({{ admin[2] }}) - {{ admin[3] }} years old</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/">Go to Home</a>
+</body>
+</html>

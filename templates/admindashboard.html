@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Navbar styles */
+        nav {
+            background-color: #a52a2a; /* Brown background */
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        /* University Logo */
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px; /* Adjust logo size */
+            margin-right: 10px;
+        }
+
+        /* Navbar links */
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .navbar-links a:hover {
+            text-decoration: underline;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+            height: 12rem;
+            width: 16rem;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .card .icon {
+            font-size: 3rem;
+            color: #a52a2a; /* Brown color for the icon */
+        }
+
+        .btn-card {
+            background-color: #a52a2a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-card:hover {
+            background-color: #6f1e1e;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .btn-primary{
+            background-color: #a52a2a;
+            border-color: #a52a2a;
+
+        }
+        .btn-primary:hover{
+            background-color: maroon;
+            border-color: maroon;
+        }
+
+        
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="http://www.pdn.ac.lk" class="logo">
+            <img src="{{ url_for('static', filename='university_logo.png') }}">
+            
+        </a>
+
+        
+    
+       
+        <div class="navbar-links">
+            <a href="#">Department</a>
+            <a href="#">Publication</a>
+            <a href="#">Online Services</a>
+            <a href="/login">SignIn</a>
+            <a href="/register">SignUp</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Loop to create cards -->
+            {% for card in cards %}
+            <div class="col-md-3 mb-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <div class="icon mb-3">
+                            <!-- Dynamically display the icon -->
+                            <i class="{{ card.icon }}" style="font-size: 24px;"></i>
+                        </div>
+                        <h5 class="card-title">{{ card.title }}</h5>
+                        <p class="card-text">{{ card.description }}</p>
+                        <a href="{{ card.link }}" class="btn btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+        <div style="display: flex; justify-content: space-between; align-items: center; color:brown">
+                
+            <p style="margin-left: 1rem; text-align: left;">Student Management System</p>
+            <p style="margin-right: 1rem;">&copy; <span id="year"></span> All rights reserved</p>
+        </div>
+    </footer>
+    </div>
+
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
