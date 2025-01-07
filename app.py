@@ -131,34 +131,34 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect('/login')  # Redirect to login page after logout
 
-@app.route('/studentbooks', methods=['GET'])
-def list_books():
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('SELECT id, title, author, catagory, isbn, filename FROM library')
-        books = cursor.fetchall()
-    return render_template('studentbooks.html', books=books)
+# @app.route('/studentbooks', methods=['GET'])
+# def list_books():
+#     with sqlite3.connect(DATABASE) as conn:
+#         cursor = conn.cursor()
+#         cursor.execute('SELECT id, title, author, catagory, isbn, filename FROM library')
+#         books = cursor.fetchall()
+#     return render_template('studentbooks.html', books=books)
 
-# Route to download a book
-# Route to download a book
-@app.route('/download/<int:book_id>', methods=['GET'])
-def download_book(book_id):
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        # Corrected query to fetch from the 'library' table, not 'books'
-        cursor.execute('SELECT filename FROM library WHERE id = ?', (book_id,))
-        book = cursor.fetchone()
-        if book:
-            filename = book[0]
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            if os.path.exists(file_path):
-                return send_file(file_path, as_attachment=True)
-            else:
-                flash('File not found on the server!', 'danger')
-                return redirect('/studentbooks')
-        else:
-            flash('Book not found!', 'danger')
-            return redirect('/studentbooks')
+# # Route to download a book
+# # Route to download a book
+# @app.route('/download/<int:book_id>', methods=['GET'])
+# def download_book(book_id):
+#     with sqlite3.connect(DATABASE) as conn:
+#         cursor = conn.cursor()
+#         # Corrected query to fetch from the 'library' table, not 'books'
+#         cursor.execute('SELECT filename FROM library WHERE id = ?', (book_id,))
+#         book = cursor.fetchone()
+#         if book:
+#             filename = book[0]
+#             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             if os.path.exists(file_path):
+#                 return send_file(file_path, as_attachment=True)
+#             else:
+#                 flash('File not found on the server!', 'danger')
+#                 return redirect('/studentbooks')
+#         else:
+#             flash('Book not found!', 'danger')
+#             return redirect('/studentbooks')
 
 
 
@@ -328,9 +328,17 @@ def init_db():
 
 init_db()
 
-# Route to display the book upload form
-@app.route('/addbook', methods=['GET', 'POST'])
-def add_book():
+#  Admin Routes
+@app.route('/admin/books', methods=['GET'])
+def admin_list_books():
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, title, author, catagory, isbn, filename FROM library')
+        books = cursor.fetchall()
+    return render_template('admin_books.html', books=books)  # Admin-specific template
+
+@app.route('/admin/addbook', methods=['GET', 'POST'])
+def admin_add_book():
     if request.method == 'POST':
         title = request.form.get('title')
         author = request.form.get('author')
@@ -361,9 +369,47 @@ def add_book():
         conn.commit()
 
         flash('Book uploaded successfully!', 'success')
-        return redirect('/books')
+        return redirect('/admin/books')
 
     return render_template('addbook.html')
+
+
+# # Route to display the book upload form
+# @app.route('/admin/addbook', methods=['GET', 'POST'])
+# def add_book():
+#     if request.method == 'POST':
+#         title = request.form.get('title')
+#         author = request.form.get('author')
+#         catagory = request.form.get('catagory')
+#         isbn = request.form.get('isbn')
+#         file = request.files.get('file')
+
+#         # Validate inputs
+#         if not title or not author or not catagory or not isbn or not file:
+#             flash('All fields are required!', 'danger')
+#             return redirect(request.url)
+
+#         if not allowed_file(file.filename):
+#             flash('Only PDF files are allowed!', 'danger')
+#             return redirect(request.url)
+
+#         # Secure the file name and save
+#         filename = secure_filename(file.filename)
+#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+#         # Save book metadata to the database
+#         with sqlite3.connect(DATABASE) as conn:
+#             cursor = conn.cursor()
+#             cursor.execute('''
+#                 INSERT INTO library (title, author, catagory, isbn, filename) 
+#                 VALUES (?, ?, ?, ?, ?)
+#             ''', (title, author, catagory, isbn, filename))
+#         conn.commit()
+
+#         flash('Book uploaded successfully!', 'success')
+#         return redirect('/books')
+
+#     return render_template('addbook.html')
 
 # Route to display all books
 @app.route('/books', methods=['GET'])
@@ -396,7 +442,7 @@ def download_book(book_id):
             return redirect('/books')
 
 # Route to delete a book
-@app.route('/delete/<int:book_id>', methods=['POST'])
+@app.route('/admin/delete/<int:book_id>', methods=['POST'])
 def delete_book(book_id):
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
@@ -417,9 +463,9 @@ def delete_book(book_id):
             conn.commit()
             flash('Book deleted successfully!', 'success')
         else:
-            flash('Book not found!', 'danger')
-    
-    return redirect('/books')
+            flash('Book not found!', 'danger')    
+           
+        return render_template('books.html')
 
 
 if __name__ == '__main__':
